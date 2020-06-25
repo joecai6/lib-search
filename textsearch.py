@@ -9,7 +9,7 @@ catalogSize = 20000000
 csv.field_size_limit(catalogSize)
 
 with open("parsed_test.txt",mode='r', encoding="utf8") as libFile:
-    test_input = "";
+    test_input = "000000500";
     f = open("results.txt", mode="w", encoding="utf8")
     print("searching...")
     for row in libFile:
