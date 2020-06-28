@@ -9,20 +9,21 @@ import time
 start = time.time()
 df = pd.read_pickle('../test_data/records_test.pkl')
 print(time.time()-start)
-df.columns = ["Record", "Title","Publisher","Place","Date","Author","Edition"]
+
 
 titles = df["Title"]
 title_counts = titles.value_counts()
 #print(df.count())
 #print(df.head(10))
 #print(title_counts)
-small = df.loc[0:10,:]
+small = df.loc[1:100,:]
+small = small[["Author", "Record", "Title","Publisher","Place","Date","Edition"]]
 small = small.sort_values('Author')
-print(small)
+#print(small)
 grouped = small.groupby('Author')
-#small.to_excel("out.xlsx")
-for name, group in grouped:
-    print(name)
-    print(group)
+grouped = grouped.apply(lambda x: x.sort_values(['Author']))
 
+#small.to_excel("out.xlsx")
+print(grouped)
+small.to_csv('../test_data/groups.csv', sep='\t',index=True)
 #to optimize use some sort of data structure to have alphabetical order
