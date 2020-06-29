@@ -31,8 +31,10 @@ for char in list_author:
     end = dict.get(char) + begin
     if ord(char) >= ord('A') and ord(char) <= ord('Z'):
         df.iloc[begin:end,:].to_csv("../test_data/authors/author_" + str(char) + ".txt", sep='\t', header=False)
+        df.iloc[begin:end,:].to_pickle("../test_data/authors_pkl/author_" + str(char) + ".pkl")
     else:
         df.iloc[begin:end,:].to_csv("../test_data/authors/author_symb" + ".txt", sep='\t', mode='a', header=False)
+        df.iloc[begin:end,:].to_pickle("../test_data/authors/author_symb.pkl")
     begin = end
 
 print("Splitted into alphabetical files")
