@@ -23,12 +23,13 @@ def match_ratio_title(row, query):
     return (matches >= 1)
 
 def get_file(name):
-    path = '../test_data/authors_pkl/'
+    path = '../parsed_data/authors_pkl/'
     file_name = 'author_' + str(name[0].upper()) + '.pkl'
     return path + file_name
 
 start = time.time()
-df = pd.read_pickle('../test_data/records_test.pkl')
+
+#df = pd.read_pickle('../test_data/records_test.pkl')
 df_q = pd.read_csv('../test_data/test_queries.csv', sep='\t')
 
 '''
@@ -52,6 +53,9 @@ print(df.loc[df_matched.iloc[0,0],:])
 print(df_q.loc[df_matched.iloc[0,1],:])
 '''
 
+'''
+Pandas Test
+
 titles = df["Title"]
 title_counts = titles.value_counts()
 #print(df.count())
@@ -61,6 +65,7 @@ title_counts = titles.value_counts()
 small = df.loc[:,:]
 small = small[["Author", "Record", "Title","Publisher","Place","Date","Edition"]]
 small = small.sort_values('Author')
+'''
 
 '''
 Splitting into keywords
@@ -75,21 +80,25 @@ print(new_small.tail(10))
 res = new_small[new_small['Words'] == 'the']
 print(res)
 '''
+
+'''
 grouped = small.groupby('Author')
 grouped = grouped.apply(lambda x: x.sort_values(['Author']))
-
-#small.to_excel("out.xlsx")
-#print(grouped)
+small.to_excel("out.xlsx")
+print(grouped)
+'''
 
 while True:
     author_last = input('Enter the author\'s last name:')
     if(author_last == 'q'):
         break
     df_auth = pd.read_pickle(get_file(author_last))
+    df_auth = df_auth[df_auth['Author'].str.contains(author_last, regex=False, case=False)]
     print(df_auth)
 
     query = input('Enter the title: ')
-    print(df_auth[df_auth.apply(lambda row: match_ratio_title(row,query), axis=1)])
+    df_title = df_auth[df_auth['Title'].str.contains(query, regex=False, case=False)]
+    print(df_title)
     
     #print(df[df.apply(lambda row: match_ratio_title(row,query), axis=1)])
     #print(df[df.apply(lambda row: match_ratio(row, query), axis=1) > 50])
