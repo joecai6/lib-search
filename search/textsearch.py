@@ -30,7 +30,6 @@ def get_file(name):
 start = time.time()
 
 #df = pd.read_pickle('../test_data/records_test.pkl')
-df_q = pd.read_csv('../test_data/test_queries.csv', sep='\t')
 
 '''
 Record linking using text algorithms
