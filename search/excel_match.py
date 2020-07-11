@@ -1,3 +1,10 @@
+'''
+    The file runs the matching of the excel file and all the records in the library.
+    The author is indexed from the author dataframes and then the titles are queried.
+    The program continues to determine if there are matches with the publisher and
+    the date.
+
+'''
 import csv
 import sys
 import pandas as pd
@@ -9,9 +16,12 @@ import warnings
 
 from fuzzywuzzy import fuzz
 
+# Ignore warnings that are printed in console
 warnings.simplefilter(action='ignore', category=FutureWarning)
 pd.options.mode.chained_assignment = None
 
+
+# Fuzzy matches with the matched record's publisher and query publisher
 def fuzzy_matching(query, publisher):
     ratio = fuzz.token_set_ratio(query, publisher)
     if query == 'nan' or 'publisher not identified' in query or 's.n.' in publisher:
@@ -19,15 +29,21 @@ def fuzzy_matching(query, publisher):
     #print(query, " ", publisher, " ", ratio)
     return ratio 
 
+# Gets the file given the author's last name
 def get_file(name):
     path = '../parsed_data/authors_pkl/'
     file_name = 'author_' + str(name[0].upper()) + '.pkl'
     return path + file_name
 
-excel = pd.read_excel('../test_data/queries/test_q29.xlsx')
+# Program to match the excel sheet
+file_query = input("Please enter the name of the excel file: ")
+path = '../test_data/queries/' + file_query + '.xlsx'
+excel = pd.read_excel(path)
+
+print("Querying File " + path)
+
 cols = ['Author', 'Title', 'Edition', 'Pub Place', 'Publisher', 'Date']
 
-excel[cols].to_csv('../test_data/queries/test_q29.csv', sep='\t', index=None)
 
 df_q = excel[cols]
 df_q = df_q.astype(str)
@@ -35,10 +51,14 @@ match_list = []
 missing_list = []
 titles = []
 
+# clears out the contents of the files
 open('./results.txt', 'w').close()
 open('./results2.txt', 'w').close()
 
+# iterating through all rows of the excel df
 for i,row in df_q.iterrows():
+
+    # Gets the first letter of the author's last and the first name
     author = row['Author']
     if author == 'nan':
         author_last = 'NONE'
@@ -50,10 +70,15 @@ for i,row in df_q.iterrows():
         
     title = row['Title']
     date = row['Date']
+
+    # Gets the digits of the date
+    date = re.sub(r'[^\w\s]','', date)
+    date = re.findall(r'\d+', date)[0]
+    
     publisher = row['Publisher']
 
-    date = re.sub(r'[^\w\s]','', date)
     title_short = ""
+    
     if(len(title.split(' ')) > 3):
         title_short = ' '.join(title.split()[:3])
     else:
@@ -61,7 +86,7 @@ for i,row in df_q.iterrows():
 
     title_short = re.sub(r'[^\w\s]','', title_short).strip(' ')
     title_short = re.sub(r"\s\s+", " ", title_short)
-    date = re.findall(r'\d+', date)[0]
+    
 
     print(author_last, " ", author_first, " ", title_short, " ", date, " ", publisher)
     
@@ -69,19 +94,17 @@ for i,row in df_q.iterrows():
 
     df_auth = df_auth[df_auth['Author'].str.contains(author_last, regex=False, case=False)]
 
-    #df_auth = df_auth[df_auth['Author'].str.contains(author_first, regex=False, case=False)]
 
     df_auth['Title'] = df_auth['Title'].str.replace(r'[^\w\s]','')
     df_auth['Title'] = df_auth['Title'].str.replace(r'\s+', ' ')
 
     df_title = df_auth[df_auth['Title'].str.contains(title_short, regex=False, case=False)]
-    #df_title['Date'] = df_title['Date'].str.extract('(\d+)')
     
     df_date = df_title[df_title['Date'].str.contains(date, regex=False, case=False, na=False) | df_title['Date'].str.contains('9999', regex=False, case=False, na=False)]
     df_pub = df_date[df_date['Publisher'].apply((lambda pub: fuzzy_matching(publisher, pub) >= 80))]
 
-    df_title.to_csv('./results2.txt', sep='\t', mode='a', header=None)
-    df_pub.to_csv('./results.txt', sep='\t', mode='a', header=None)
+    df_title.to_csv('./output/results2.txt', sep='\t', mode='a', header=None)
+    df_pub.to_csv('./output/results.txt', sep='\t', mode='a', header=None)
 
     missing = []
     if df_auth.empty:
@@ -98,7 +121,7 @@ for i,row in df_q.iterrows():
     missing_list.append(missing)
     titles.append(row['Title'])
 
-df_res = pd.DataFrame({'In': match_list, 'Notes': missing_list, 'Title':titles})
+df_res = pd.DataFrame({'In': match_list, 'Notes': missing_list, 'Record':titles})
 df_res.index += 2
 print(df_res)
-df_res.to_excel('./match.xlsx', index=None)
+df_res.to_excel('./output/match.xlsx', index=None)
