@@ -22,12 +22,18 @@ for i, date in enumerate(dates_str):
 
 #print(dates, date_counts)
 
-plt.plot(dates, date_counts)
+plt.rcParams['font.family'] = "sans-serif"
+#plt.rcParams['axes.facecolor'] = 'gray'
+plt.rcParams['figure.autolayout'] = True
+
+plt.plot(dates, date_counts, color='green')
+plt.title("Records by years")
+
 plt.xlabel("Dates")
 plt.ylabel("# of Records Published")
 
 plt.xlim(1700, 2020)
 plt.ylim(0, max(date_counts)+50)
-plt.savefig('test.png')
+plt.savefig('data_graph.png')
 
 plt.show()
