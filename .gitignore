@@ -3,3 +3,4 @@ test_data/
 env/
 .vscode/
 .gitignore
+search/output/

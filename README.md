@@ -30,9 +30,6 @@ The inital data cleaning and parsing of the dataset was done using pandas datafr
 
 After I created the complete data frame, I grouped the table by the author's last name. Since I wanted to seperate the data into chuck for faster reading, I decided to split by the author's name. The group by functions are done in gen_authorfiles.py. The chunking of data allows the process of reading dataframes faster. Each grouped dataframe is saved in a pickle file in the authors folder.
 
-To-dos
-- chunk data by title and publication date
-
 <a id="search"></a>
 # Search Function
 
@@ -46,24 +43,23 @@ Keyword Search
 
 The keyword search requires inputting the author's name. After the author's name is inputted, the title can be searched for through the pandas contains and apply methods to the dataframe. The result is a dataframe that contains all the records that match the author and title.
 
-To-dos
-- More optimized and accurate keyword search
 
 <a id="visual"></a>
 # Data Visualization
 
 I wanted to explore how the variety of records at the HathiTrust library so I decided to visualize the dataset. There are two visualizations: a publication date graph and a publication location graph. 
 
+<img src="./graph/graph_imgs/date_graph.png" width="400" height="300"/><br>
 The publication date graph explores the number of records published in a particular year.
 
+<img src="./graph/graph_imgs/place_graph.png" width="500" height="300"/><br>
 The location graph outlines the publication places of all the records. The graph uses geopandas to map out all the geolocations of the cities that the records were published in.
 
 <a name="gui"></a>
 # Interface
-
-WIP
-
+<p align=center>
+<img src="./img/interface.png" width="550" height="600"/><br>
+</p>
 <a name="install"></a>
 # Installation
 
-WIP

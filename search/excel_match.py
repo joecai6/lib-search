@@ -13,6 +13,7 @@ import time
 import re
 import string
 import warnings
+import os
 
 from fuzzywuzzy import fuzz
 
@@ -52,8 +53,8 @@ missing_list = []
 titles = []
 
 # clears out the contents of the files
-open('./results.txt', 'w').close()
-open('./results2.txt', 'w').close()
+open('./output/results.txt', 'w').close()
+open('./output/results2.txt', 'w').close()
 
 # iterating through all rows of the excel df
 for i,row in df_q.iterrows():
@@ -85,7 +86,7 @@ for i,row in df_q.iterrows():
         title_short = title
 
     title_short = re.sub(r'[^\w\s]','', title_short).strip(' ')
-    title_short = re.sub(r"\s\s+", " ", title_short)
+    title_short = re.sub(r"\s+", " ", title_short)
     
 
     print(author_last, " ", author_first, " ", title_short, " ", date, " ", publisher)
@@ -103,7 +104,7 @@ for i,row in df_q.iterrows():
     df_date = df_title[df_title['Date'].str.contains(date, regex=False, case=False, na=False) | df_title['Date'].str.contains('9999', regex=False, case=False, na=False)]
     df_pub = df_date[df_date['Publisher'].apply((lambda pub: fuzzy_matching(publisher, pub) >= 80))]
 
-    df_title.to_csv('./output/results2.txt', sep='\t', mode='a', header=None)
+    df_auth.to_csv('./output/results2.txt', sep='\t', mode='a', header=None)
     df_pub.to_csv('./output/results.txt', sep='\t', mode='a', header=None)
 
     missing = []
@@ -121,7 +122,10 @@ for i,row in df_q.iterrows():
     missing_list.append(missing)
     titles.append(row['Title'])
 
-df_res = pd.DataFrame({'In': match_list, 'Notes': missing_list, 'Record':titles})
+df_res = pd.DataFrame({'Match?': match_list, 'Missing': missing_list, 'Record Title':titles})
 df_res.index += 2
 print(df_res)
-df_res.to_excel('./output/match.xlsx', index=None)
+df_res.to_pickle('../matches.pkl')
+
+# Run the interface, TO-DO inputting a file should be part of the gui
+# os.system('python3 ../interface.py')

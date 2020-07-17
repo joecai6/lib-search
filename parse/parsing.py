@@ -15,17 +15,17 @@ import sys
 catalogSize = 20000000
 csv.field_size_limit(catalogSize)
 
-print("Hello World")
+print("Hello World. Parsing the inital dataset.")
 
 # opens the parsed file to be written to
-with open('../test_data/parsed_file.txt', encoding="utf8", mode='w', newline='') as parsed:
+with open('../parsed_data/parsed_file.txt', encoding="utf8", mode='w', newline='') as parsed:
 
     # initialize the writer to write to file
     parsed_writer = csv.writer(parsed, delimiter='\t', quoting=csv.QUOTE_NONE, escapechar='\\')
     parsed_writer.writerow(['Record #', 'Title', 'Publisher', 'Place', 'Date', 'Author', 'Edition'])
 
     # opens the Hathitrust file downloaded from the digital library 
-    with open('../test_data/hathi_full_20200401.txt', encoding="utf8") as ts_file:
+    with open('../parsed_data/hathi_full_20200701.txt', encoding="utf8") as ts_file:
 
         # reader that replaces all null values with a empty string, this prevents access null error
         ts_reader = csv.reader((line.replace('\0','') for line in ts_file), delimiter='\t', quotechar=' ')
