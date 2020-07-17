@@ -13,8 +13,7 @@ I was introduced to HathiTrust through my part-time job working at a library. On
 1. [Parsing](#parsing)
 2. [Search](#search)
 3. [Data Visualization](#visual)
-4. Application Interface
-5. How to Install
+4. [Application Interface](#gui)
 
 I implemented the functionalities using Python with libaries such as pandas, numpy and matplotlib. 
 
@@ -60,7 +59,4 @@ The location graph outlines the publication places of all the records. The graph
 <p align="center">
 <img src="./img/interface.PNG" width="450" height="500"/>
 </p>
-
-<a name="install"></a>
-# Installation
 
