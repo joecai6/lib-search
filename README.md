@@ -57,9 +57,10 @@ The location graph outlines the publication places of all the records. The graph
 
 <a name="gui"></a>
 # Interface
-<p align=center>
+<p align='center'>
 <img src="./img/interface.png" width="550" height="600"/><br>
 </p>
+
 <a name="install"></a>
 # Installation
 
